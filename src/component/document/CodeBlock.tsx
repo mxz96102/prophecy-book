@@ -1,7 +1,9 @@
 import * as React from 'react';
 import classnames from 'classnames';
+import ViewStore from "../../store/ViewStore";
 import { observer } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
+import SegmentModel from '../../model/SegmentModel';
 require("codemirror/mode/javascript/javascript");
 
 const options = {
@@ -11,7 +13,13 @@ const options = {
 }
 
 @observer
-class CodeBlock extends React.Component<{}, { title: string }> {
+class CodeBlock extends React.Component<{
+    store: ViewStore,
+    onDoubleClick: React.MouseEventHandler,
+    isActive: boolean,
+    segment: SegmentModel,
+    key: string
+}> {
     instance:any = null;
 
     render() {

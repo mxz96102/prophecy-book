@@ -7,9 +7,11 @@ import ViewStore from "./store/ViewStore";
 import { safeEval } from "./tensorflow";
 
 @observer
-class App extends React.Component {
+class App extends React.Component<{
+    store: ViewStore
+}> {
     render() {
-        const {store} = this.props;
+        const { store } = this.props;
 
         return (
             <div className="app">

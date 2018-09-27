@@ -13,8 +13,11 @@
   "dependencies": {
     "@tensorflow/tfjs": "^0.13.0",
     "@types/classnames": "^2.2.6",
+    "@types/codemirror": "^0.0.61",
+    "@types/markdown-it": "^0.0.5",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",
+    "@types/react-fa": "^4.1.5",
     "classnames": "^2.2.6",
     "codemirror": "^5.40.2",
     "lodash": "^4.17.11",

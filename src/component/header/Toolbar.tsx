@@ -1,15 +1,19 @@
 import * as React from 'react';
-import {observer} from 'mobx-react'
+import {observer} from 'mobx-react';
+import classnames from 'classnames';
+import ViewStore from "../../store/ViewStore";
 import {Icon} from 'react-fa';
 
 @observer
-class Toolbar extends React.Component {
+class Toolbar extends React.Component<{
+  store: ViewStore
+}> {
     render() {
       const { store } = this.props;
 
       return (
         <div className="toolbar">
-          <span className="tool" disabled>
+          <span className={classnames("tool", {disabled: true})}>
             <Icon name="save"/> 保存
           </span>
           <span className="tool" onClick={() => store.newSeg('TEXT', {}, "双击修改markdown文本")}>
@@ -21,7 +25,7 @@ class Toolbar extends React.Component {
           <span className="tool" onClick={() => store.deleteSelectSeg()}>
             <Icon name="minus-square"/> 删除块
           </span>
-          <span className="tool" disabled={store.selectedSeg.type !== "CODE"} onClick={() => store.runNowCode()}>
+          <span className={classnames("tool", {disabled: store.selectedSeg && store.selectedSeg.type !== "CODE"})} onClick={() => store.runNowCode()}>
             <Icon name="play"/> 运行Code
           </span>
         </div>

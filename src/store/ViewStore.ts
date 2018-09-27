@@ -1,11 +1,11 @@
 import {observable, computed, reaction, action, toJS} from 'mobx';
-import SegmentModel from '../model/SegmentModel'
+import SegmentModel, { SegmentModelLike } from '../model/SegmentModel'
 import {safeEval} from '../tensorflow';
 
 export default class ViewStore {
     @observable segments:Array<SegmentModel> = [];
 
-    @observable data = {};
+    @observable data:any = {};
 
     @observable date = new Date();
 
@@ -14,22 +14,22 @@ export default class ViewStore {
     @observable selectId = "title";
 
     @computed get selectedSeg() {
-        return this.segments.find(seg => seg.id === this.selectId) || {}
+        return this.segments.find(seg => seg.id === this.selectId)
     }
 
-    @action setTitle(title) {
+    @action setTitle(title: string) {
         this.title = title;
     }
 
-    @action updateData(data) {
+    @action updateData(data: Object) {
         this.data = {...this.data, ...data}
     }
 
-    @action setSelect(id) {
+    @action setSelect(id: string) {
         this.selectId = id;
     }
 
-    @action newSeg(type, data, content) {
+    @action newSeg(type: string, data:any, content:string) {
         this.segments.push(new SegmentModel(type, data, content))
     }
 
@@ -37,7 +37,7 @@ export default class ViewStore {
         this.segments = this.segments.filter(seg => seg.id !== id)
     }
 
-    @action insertSeg({type, data, content, id}) {
+    @action insertSeg({type, data, content, id}: {type: string, data: any, content: string, id: string}) {
         this.segments.push(new SegmentModel(type, data, content, id))
     }
 
@@ -57,7 +57,7 @@ export default class ViewStore {
         }
     }
 
-    @action fromJS(obj) {
+    @action fromJS(obj: ViewStoreLike) {
         this.segments = this.segments.slice(0);
         obj.segments.map(segment => this.insertSeg(segment));
         this.title = obj.title;
@@ -68,7 +68,15 @@ export default class ViewStore {
         return {
             segments: this.segments.map(seg => seg.toJS()),
             title: this.title,
-            date: +this.date
+            date: +this.date,
+            data: this.data
         }
     }
+}
+
+interface ViewStoreLike {
+    segments: Array<SegmentModelLike>,
+    title: string,
+    date: number,
+    data: any
 }

@@ -1,7 +1,10 @@
 import * as React from 'react';
+import ViewStore from "../../store/ViewStore";
 import Toolbar from './Toolbar'
 
-class Header extends React.Component {
+class Header extends React.Component<{
+    store: ViewStore
+}> {
     render() {
         const { store } = this.props;
 

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import classnames from 'classnames';
-import md from 'markdown-it';
+import * as md from 'markdown-it';
 import { observer } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
+import ViewStore from "../../store/ViewStore";
+import SegmentModel from '../../model/SegmentModel';
 require("codemirror/mode/markdown/markdown");
 
 const options = {
@@ -14,7 +16,13 @@ const options = {
 const markdown = new md();
 
 @observer
-class TextBlock extends React.Component<{}, { content: string }> {
+class TextBlock extends React.Component<{
+    store: ViewStore,
+    onDoubleClick: React.MouseEventHandler,
+    isActive: boolean,
+    segment: SegmentModel,
+    key: string
+}> {
     render() {
         const { isActive = false, onDoubleClick, segment } = this.props;
 

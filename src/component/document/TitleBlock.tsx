@@ -1,10 +1,15 @@
 import * as React from 'react';
 import classnames from 'classnames';
 import { observer } from "mobx-react";
+import ViewStore from "../../store/ViewStore";
 
 @observer
-class TitleBlock extends React.Component<{}> {
-    handleTitleChange = ({ target: { value: title } }) => this.props.store.setTitle(title)
+class TitleBlock extends React.Component<{
+    store: ViewStore,
+    onDoubleClick: React.MouseEventHandler,
+    isActive: boolean
+}> {
+    handleTitleChange = ({ target: { value: title } }: React.ChangeEvent<HTMLInputElement>) => this.props.store.setTitle(title)
 
     render() {
         const { title, date } = this.props.store;
