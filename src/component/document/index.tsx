@@ -7,7 +7,7 @@ import TextBlock from './TextBlock';
 @observer
 class Document extends React.Component {
     selectBlock(e, id) {
-        e.preventDefault();
+        e.stopPropagation();
         this.props.store.setSelect(id);
     }
 
@@ -15,10 +15,18 @@ class Document extends React.Component {
         const { store } = this.props;
 
         return (
-            <div className="document">
-                <TitleBlock store={store} isActive={store.selectId === "title"} onClick={(e) => selectBlock(e, "title")}/>
-                <TextBlock isActive={store.selectId === "text"} onClick={(e) => selectBlock(e, "text")}/>
-                <CodeBlock isActive={store.selectId === "code"} onClick={(e) => selectBlock(e, "code")}/>
+            <div className="document" onDoubleClick={(e) => this.selectBlock(e, "")}>
+                <TitleBlock store={store} isActive={store.selectId === "title"} onDoubleClick={(e) => this.selectBlock(e, "title")}/>
+                {
+                    store.segments.map( segment => {
+                        switch (segment.type) {
+                            case "TEXT":
+                            return <TextBlock key={segment.id} isActive={store.selectId === segment.id} onDoubleClick={(e) => this.selectBlock(e, segment.id)} segment={segment}/>
+                            case "CODE":
+                            return <CodeBlock key={segment.id} isActive={store.selectId === segment.id} onDoubleClick={(e) => this.selectBlock(e, segment.id)} segment={segment}/>
+                        }
+                    })
+                }            
             </div>
         )
     }

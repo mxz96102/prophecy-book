@@ -1,42 +1,34 @@
 import * as React from 'react';
+import classnames from 'classnames';
+import { observer } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 require("codemirror/mode/javascript/javascript");
 
 const options = {
     mode: 'javascript',
     theme: 'idea',
-    lineNumbers: false
+    lineNumbers: false,
 }
 
+@observer
 class CodeBlock extends React.Component<{}, { title: string }> {
-    state = {
-        code: [
-            "const a = 1200;",
-            "const b = [11,23,345,54,23,23];",
-            "",
-            "global.put('a', a);",
-            "global.put('b', b);",
-            "",
-            "global.end();"
-        ].join("\n")
-    }
+    instance:any = null;
 
     render() {
-        const { title } = this.state;
-        const { onClick } = this.props;
+        const { onDoubleClick, isActive, segment } = this.props;
 
         return (
-            <section className="block code" onClick={onClick}>
+            <section className={classnames("block","code", {active: isActive})} onDoubleClick={onDoubleClick}>
                 <CodeMirror
-                    value={this.state.code}
+                    value={segment.content}
                     options={options}
                     onBeforeChange={(editor, data, value) => {
-                        this.setState({ code: value });
+                        segment.setContent(value)
                     }}
+                    editorDidMount={editor => { this.instance = editor }}
                 />
                 <pre className="result">
-                    "a": 1200,
-                    "b": [11,23,345,54,23,23]
+                    {segment.data && JSON.stringify(segment.data, null, 2)}
                 </pre>
                 <span className="type-tag">代 码</span>
             </section>

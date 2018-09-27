@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { markdown } from 'markdown';
+import classnames from 'classnames';
+import md from 'markdown-it';
+import { observer } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 require("codemirror/mode/markdown/markdown");
 
@@ -9,34 +11,25 @@ const options = {
     lineNumbers: false
 }
 
+const markdown = new md();
+
+@observer
 class TextBlock extends React.Component<{}, { content: string }> {
-    state = {
-        content: [
-            "## 第一步",
-            "- 使用 `global.set` 来设定数据",
-            "- 使用 `global.get` 获取数据",
-            "- 使用 `global.end` 结束当前代码块运行"
-        ].join('\n')
-    }
-
-    handleTitleChange = ({ target: { value: title } }) => this.setState({ title })
-
     render() {
-        const { content } = this.state;
-        const { active = false, onClick } = this.props;
+        const { isActive = false, onDoubleClick, segment } = this.props;
 
         return (
-            <section className="block text" onClick={onClick}>
+            <section className={classnames("block","text", {active: isActive})} onDoubleClick={onDoubleClick}>
                 {
-                    active
+                    isActive
                         ? <CodeMirror
-                            value={this.state.content}
+                            value={segment.content}
                             options={options}
                             onBeforeChange={(editor, data, value) => {
-                                this.setState({ content: value });
+                                segment.setContent(value)
                             }}
                         />
-                        : <div className="md-text" dangerouslySetInnerHTML={{ __html: markdown.toHTML(content) }}></div>
+                        : <div className="md-text" dangerouslySetInnerHTML={{ __html: markdown.render(segment.content) }}></div>
                 }
                 <span className="type-tag">Markdown</span>
             </section>

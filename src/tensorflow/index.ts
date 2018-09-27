@@ -14,11 +14,11 @@ export interface IGlobal {
  * @returns {}
  */
 function globalGenerator(resolve: (value: ({})|PromiseLike<{}>) => void, context?: {[key: string]: any}) {
-        const data:{[key: string]: any} = context || {};
+        const data:{[key: string]: any} = {};
 
         return {
             set: (key: string, value:any) => (data[key] = value),
-            get: (key: string) => data[key],
+            get: (key: string) => data[key] || context[key],
             end: () => resolve(data)
         }
 }
@@ -26,6 +26,7 @@ function globalGenerator(resolve: (value: ({})|PromiseLike<{}>) => void, context
 export function safeEval(code: string, context?: {[key: string]: any}) {
     return new Promise(resolve => {
         const global = globalGenerator(resolve, context);
+        const {get, set, end} = global;
         const window = {};
         const tf = tensorflow;
 

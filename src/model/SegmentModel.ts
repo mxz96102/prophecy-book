@@ -1,4 +1,4 @@
-import {observable} from 'mobx';
+import {observable, action} from 'mobx';
 import {randomHash} from '../util.ts';
 
 export default class SegmentModel {
@@ -14,8 +14,12 @@ export default class SegmentModel {
         this.id = id || randomHash();
     }
 
-    setContent(content) {
+    @action setContent(content) {
         this.content = content;
+    }
+
+    @action setData(data) {
+        this.data = data;
     }
 
     toJS() {
