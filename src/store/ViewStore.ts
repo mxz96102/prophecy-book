@@ -25,6 +25,10 @@ export default class ViewStore {
         this.data = {...this.data, ...data}
     }
 
+    @action resetData() {
+        this.data = {}
+    }
+
     @action setSelect(id: string) {
         this.selectId = id;
     }
@@ -55,6 +59,10 @@ export default class ViewStore {
             safeEval(content, this.data)
             .then((res) => {seg.setData(res), this.updateData(res)});
         }
+    }
+
+    @action runAllCode () {
+
     }
 
     @action fromJS(obj: ViewStoreLike) {

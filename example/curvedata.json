@@ -1,0 +1,49 @@
+{
+    "segments": [
+        {
+            "type": "TEXT",
+            "data": {},
+            "content": "## Input Data\nOur synthetic data set is composed of x- and y-coordinates that look as follows when plotted on a Cartesian plane:",
+            "id": "4bdc6g"
+        },
+        {
+            "type": "TEXT",
+            "data": {},
+            "content": "### Step 1: Set up Variables\nFirst, let's create some variables to hold our current best estimate of these values at each step of model training. To start, we'll assign each of these variables a random number:",
+            "id": "102iaa4"
+        },
+        {
+            "type": "CODE",
+            "data": {},
+            "content": "const a = tf.variable(tf.scalar(Math.random()));\nconst b = tf.variable(tf.scalar(Math.random()));\nconst c = tf.variable(tf.scalar(Math.random()));\nconst d = tf.variable(tf.scalar(Math.random()));\n\nfunction generateData(numPoints, coeff, sigma = 0.04) {\n  return tf.tidy(() => {\n    const [a, b, c, d] = [\n      tf.scalar(coeff.a), tf.scalar(coeff.b), tf.scalar(coeff.c),\n      tf.scalar(coeff.d)\n    ];\n\n    const xs = tf.randomUniform([numPoints], -1, 1);\n\n    // Generate polynomial data\n    const three = tf.scalar(3, 'int32');\n    const ys = a.mul(xs.pow(three))\n      .add(b.mul(xs.square()))\n      .add(c.mul(xs))\n      .add(d)\n      // Add random noise to the generated data\n      // to make the problem a bit more interesting\n      .add(tf.randomNormal([numPoints], 0, sigma));\n\n    // Normalize the y values to the range 0 to 1.\n    const ymin = ys.min();\n    const ymax = ys.max();\n    const yrange = ymax.sub(ymin);\n    const ysNormalized = ys.sub(ymin).div(yrange);\n\n    return {\n      xs, \n      ys: ysNormalized\n    };\n  })\n}\n\nconst trueCoefficients = {a: -.8, b: -.2, c: .9, d: .5};\nconst trainingData = generateData(100, trueCoefficients);\n\nset('trainingData', trainingData);\nset('abcd', {a, b, c, d})\nend();",
+            "id": "566ibj"
+        },
+        {
+            "type": "TEXT",
+            "data": {},
+            "content": "### Step 2: Build a Model\nWe can represent our polynomial function y = ax3 + bx2 + cx + d in TensorFlow.js by chaining a series of mathematical operations: addition (add), multiplication (mul), and exponentiation (pow and square).\n\nThe following code constructs a predict function that takes x as input and returns y:",
+            "id": "l9o912"
+        },
+        {
+            "type": "CODE",
+            "data": {},
+            "content": "const {a, b, c, d} = get('abcd')\n\nfunction predict(x) {\n  // y = a * x ^ 3 + b * x ^ 2 + c * x + d\n  return tf.tidy(() => {\n    return a.mul(x.pow(tf.scalar(3))) // a * x^3\n      .add(b.mul(x.square())) // + b * x ^ 2\n      .add(c.mul(x)) // + c * x\n      .add(d); // + d\n  });\n}\n\nfunction loss(prediction, labels) {\n  // Having a good error function is key for training a machine learning model\n  const error = prediction.sub(labels).square().mean();\n  return error;\n}\n\n\n\nset('predict', predict);\nset('loss', loss);\nend();",
+            "id": "an7gk6"
+        },
+        {
+            "type": "TEXT",
+            "data": {},
+            "content": "### Step 3: Train the Model\nOur final step is to train the model to learn good values for the coefficients. To train our model, we need to define three things:\n\nA loss function, which measures how well a given polynomial fits the data. The lower the loss value, the better the polynomial fits the data.\n\nAn optimizer, which implements an algorithm for revising our coefficient values based on the output of the loss function. The optimizer's goal is to minimize the output value of the loss function.\n\nA training loop, which will iteratively run the optimizer to minimize loss.\n\n",
+            "id": "fomg4n"
+        },
+        {
+            "type": "CODE",
+            "data": {},
+            "content": "const numIterations = 75;\nconst learningRate = 0.5;\nconst optimizer = tf.train.sgd(learningRate);\nconst {predict, loss, trainingData} = context;\n\nasync function train(xs, ys, numIterations) {\n  for (let iter = 0; iter < numIterations; iter++) {\n    // optimizer.minimize is where the training happens.\n\n    // The function it takes must return a numerical estimate (i.e. loss)\n    // of how well we are doing using the current state of\n    // the variables we created at the start.\n\n    // This optimizer does the 'backward' step of our training process\n    // updating variables defined previously in order to minimize the\n    // loss.\n    optimizer.minimize(() => {\n      // Feed the examples into the model\n      const pred = predict(xs);\n      return loss(pred, ys);\n    });\n\n    // Use tf.nextFrame to not block the browser.\n    await tf.nextFrame();\n  }\n}\n\nasync function learnCoefficients() {\n  const trueCoefficients = {a: -.8, b: -.2, c: .9, d: .5};\n  const predictionsBefore = predict(trainingData.xs);\n\n  // Train the model!\n  await train(trainingData.xs, trainingData.ys, numIterations);\n\n  const predictionsAfter = predict(trainingData.xs);\n  \n  console.log('here')\n\n  set('before',await predictionsBefore.data());\n  set('after', await predictionsAfter.data());\n  console.log(context);\n  end();\n}\n\nlearnCoefficients();",
+            "id": "klmdkf"
+        }
+    ],
+    "title": "Fitting a Curve to Synthetic Data",
+    "date": 1538126727006,
+    "data": {}
+}
