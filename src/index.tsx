@@ -1,28 +1,25 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { observer } from "mobx-react";
+import { Provider, observer, inject } from "mobx-react";
 import Header from "./component/header";
 import Document from "./component/document";
 import ViewStore from "./store/ViewStore";
 import { safeEval } from "./tensorflow";
 
-@observer
-class App extends React.Component<{
-    store: ViewStore
-}> {
-    render() {
-        const { store } = this.props;
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/idea.css";
+import "./index.less";
 
-        return (
+const App = observer(['store'], ({store}) => 
             <div className="app">
                 <Header store={store} />
                 <Document store={store} />
             </div>
-        )
-    }
-}
+)
 
 ReactDOM.render(
-    <App store={new ViewStore()} />,
+    <Provider store={new ViewStore} >
+        <App />
+    </Provider>,
     document.getElementById("root")
 );

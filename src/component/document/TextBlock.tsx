@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classnames from 'classnames';
-import * as md from 'markdown-it';
+import * as MarkdownIt from "markdown-it";
 import { observer } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import ViewStore from "../../store/ViewStore";
@@ -13,7 +13,7 @@ const options = {
     lineNumbers: false
 }
 
-const markdown = new md();
+const markdown = new MarkdownIt();
 
 @observer
 class TextBlock extends React.Component<{
