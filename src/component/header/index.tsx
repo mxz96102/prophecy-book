@@ -9,7 +9,7 @@ const Header = observer(() =>
         <div className="content">
             <div className="menu">
                 📖  Prophecy Book - Notebook for Javascript AI
-                    </div>
+            </div>
             <Toolbar />
         </div>
     </header>
