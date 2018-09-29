@@ -10,12 +10,12 @@ import "codemirror/lib/codemirror.css";
 import "codemirror/theme/idea.css";
 import "./index.less";
 
-const App = observer(['store'], ({store}) => 
-            <div className="app">
-                <Header/>
-                <Document/>
-            </div>
-)
+const App = inject('store')(observer(() =>
+    <div className="app">
+        <Header />
+        <Document />
+    </div>
+))
 
 ReactDOM.render(
     <Provider store={new ViewStore} >

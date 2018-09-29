@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classnames from 'classnames';
 import * as MarkdownIt from "markdown-it";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import ViewStore from "../../store/ViewStore";
 import SegmentModel from '../../model/SegmentModel';
@@ -21,7 +21,7 @@ const TextBlock: React.SFC<{
     isActive: boolean,
     segment: SegmentModel,
     key: string
-}> = observer(['store'], ({ isActive = false, onDoubleClick, segment }) =>
+}> = inject('store')(observer(({ isActive = false, onDoubleClick, segment }) =>
     <section className={classnames("block", "text", { active: isActive })} onDoubleClick={onDoubleClick}>
         {
             isActive
@@ -36,6 +36,6 @@ const TextBlock: React.SFC<{
         }
         <span className="type-tag">Markdown</span>
     </section>
-)
+))
 
 export default TextBlock;

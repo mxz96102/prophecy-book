@@ -1,8 +1,8 @@
-import * as tensorflow from '@tensorflow/tfjs';
+const tensorflow = import('@tensorflow/tfjs');
 
 export interface IGlobal {
     // set global data
-    set: (key: string, value:any) => any;
+    set: (key: string, value: any) => any;
     // get global data
     get: (key: string) => any;
     end: () => void;
@@ -13,27 +13,27 @@ export interface IGlobal {
  * @param resolve 
  * @returns {}
  */
-function globalGenerator(resolve: (value: ({})|PromiseLike<{}>) => void, context?: {[key: string]: any}) {
-        const data:{[key: string]: any} = {};
+function globalGenerator(resolve: (value: ({}) | PromiseLike<{}>) => void, context?: { [key: string]: any }) {
+    const data: { [key: string]: any } = {};
 
-        return {
-            set: (key: string, value:any) => (data[key] = value),
-            get: (key: string) => data[key] || context[key],
-            end: () => resolve(data)
-        }
+    return {
+        set: (key: string, value: any) => (data[key] = value),
+        get: (key: string) => data[key] || context[key],
+        end: () => resolve(data)
+    }
 }
 
-export function safeEval(code: string, context?: {[key: string]: any}) {
+export function safeEval(code: string, context?: { [key: string]: any }) {
     return new Promise(resolve => {
         const global = globalGenerator(resolve, context);
-        const {get, set, end} = global;
+        const { get, set, end } = global;
         const window = {};
-        const tf = tensorflow;
-
-        try {
-            eval(code);
-        } catch(e) {
-            resolve(`error: ${e}`);
-        }
+        tensorflow.then(tf => {
+            try {
+                eval(code);
+            } catch (e) {
+                resolve(`error: ${e}`);
+            }
+        })
     })
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import classnames from 'classnames';
 import ViewStore from "../../store/ViewStore";
 import { Icon } from 'react-fa';
 
-const Toolbar = observer(['store'], ({ store }) =>
+const Toolbar = inject('store')(observer(({ store, store: { selectedSeg } }) =>
   <div className="toolbar">
     <span className={classnames("tool", { disabled: true })}>
       <Icon name="save" /> 保存
@@ -18,10 +18,10 @@ const Toolbar = observer(['store'], ({ store }) =>
     <span className="tool" onClick={() => store.deleteSelectSeg()}>
       <Icon name="minus-square" /> 删除块
           </span>
-    <span className={classnames("tool", { disabled: store.selectedSeg && store.selectedSeg.type !== "CODE" })} onClick={() => store.runNowCode()}>
+    <span className={classnames("tool", { disabled: !selectedSeg || selectedSeg.type !== "CODE" })} onClick={() => store.runNowCode()}>
       <Icon name="play" /> 运行Code
           </span>
   </div>
-)
+))
 
 export default Toolbar;

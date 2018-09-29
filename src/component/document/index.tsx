@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import ViewStore from "../../store/ViewStore";
 import TitleBlock from './TitleBlock';
 import CodeBlock from './CodeBlock';
 import TextBlock from './TextBlock';
 import SegmentModel from '../../model/SegmentModel';
 
-const Document = observer(['store'], ({ store }) =>
+const Document = inject('store')(observer(({ store }) =>
     <div className="document" onDoubleClick={(e) => store.setSelect("")}>
         <TitleBlock isActive={store.selectId === "title"} onDoubleClick={(e) => {
             e.stopPropagation();
@@ -33,6 +33,6 @@ const Document = observer(['store'], ({ store }) =>
             })
         }
     </div>
-)
+))
 
 export default Document;

@@ -56,7 +56,7 @@ module.exports = (env = {}) => {
         ],
         optimization: {
             splitChunks: {
-                chunks: 'initial',
+                chunks: 'async',
                 minSize: 3000,
                 maxSize: 0,
                 minChunks: 1,
@@ -74,11 +74,11 @@ module.exports = (env = {}) => {
                         name: 'react',
                         chunks: 'all',
                     },
-                    tensorflow: {
-                        test: /(@tensorflow\/tfjs)/,
-                        name: 'tfjs',
-                        chunks: 'all'
-                    },
+                    // tensorflow: {
+                    //     test: /(@tensorflow\/tfjs)/,
+                    //     name: 'tfjs',
+                    //     chunks: 'all'
+                    // },
                     codemirror: {
                         test: /(codemirror)/,
                         name: 'codemirror',

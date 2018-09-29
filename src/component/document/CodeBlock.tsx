@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classnames from 'classnames';
 import ViewStore from "../../store/ViewStore";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import SegmentModel from '../../model/SegmentModel';
 import "codemirror/mode/javascript/javascript";
@@ -18,7 +18,7 @@ const CodeBlock:React.SFC<{
     isActive: boolean,
     segment: SegmentModel,
     key: string
-}> = observer(['store'], ({ onDoubleClick, isActive, segment }) =>
+}> = inject('store')(observer(({ onDoubleClick, isActive, segment }) =>
     <section className={classnames("block", "code", { active: isActive })} onDoubleClick={onDoubleClick}>
         <CodeMirror
             value={segment.content}
@@ -32,6 +32,6 @@ const CodeBlock:React.SFC<{
         </pre>
         <span className="type-tag">代 码</span>
     </section>
-)
+))
 
 export default CodeBlock;
