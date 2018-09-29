@@ -4,11 +4,10 @@ import classnames from 'classnames';
 import ViewStore from "../../store/ViewStore";
 import { Icon } from 'react-fa';
 
-const Toolbar = inject('store')(observer(({ store, store: { selectedSeg } }) =>
+const Toolbar: React.SFC<{
+  store?: ViewStore
+}> = inject('store')(observer(({ store, store: { selectedSeg } }) =>
   <div className="toolbar">
-    <span className={classnames("tool", { disabled: true })}>
-      <Icon name="save" /> 保存
-          </span>
     <span className="tool" onClick={() => store.newSeg('TEXT', {}, "双击修改markdown文本")}>
       <Icon name="plus-square" /> 文本块
           </span>
@@ -21,6 +20,15 @@ const Toolbar = inject('store')(observer(({ store, store: { selectedSeg } }) =>
     <span className={classnames("tool", { disabled: !selectedSeg || selectedSeg.type !== "CODE" })} onClick={() => store.runNowCode()}>
       <Icon name="play" /> 运行Code
           </span>
+    <span className="tool" onClick={() => store.runAllCode()}>
+      <Icon name="forward" /> 所有Code
+          </span>
+    <span className="tool" onClick={() => store.saveToFile()}>
+      <Icon name="save" /> 保存到文件
+          </span>
+    <span className="tool">
+      <Icon name="upload" /> <a href="javascript;;" className="upload"><input type="file" onChange={e => store.readJson(e.target.files[0])} /> 读取文件</a>
+    </span>
   </div>
 ))
 

@@ -59,6 +59,8 @@ body {
                 margin: 0 0.2rem;
                 font-size: 0.6rem;
                 cursor: pointer;
+                overflow: hidden;
+                position: relative;
                 &:hover {
                     color: #38a8e0
                 }
@@ -68,6 +70,18 @@ body {
                 &.disabled {
                     color: #6a737d;
                     pointer-events: none;
+                }
+            }
+            a.upload {
+                color: inherit;
+                text-decoration: none;
+                input {
+                    position: absolute;
+                    font-size: 100px;
+                    right: 0;
+                    top: 0;
+                    opacity: 0;
+                    cursor: pointer
                 }
             }
         }
