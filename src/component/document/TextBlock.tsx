@@ -15,34 +15,27 @@ const options = {
 
 const markdown = new MarkdownIt();
 
-@observer
-class TextBlock extends React.Component<{
-    store: ViewStore,
+const TextBlock: React.SFC<{
+    store?: ViewStore,
     onDoubleClick: React.MouseEventHandler,
     isActive: boolean,
     segment: SegmentModel,
     key: string
-}> {
-    render() {
-        const { isActive = false, onDoubleClick, segment } = this.props;
-
-        return (
-            <section className={classnames("block","text", {active: isActive})} onDoubleClick={onDoubleClick}>
-                {
-                    isActive
-                        ? <CodeMirror
-                            value={segment.content}
-                            options={options}
-                            onBeforeChange={(editor, data, value) => {
-                                segment.setContent(value)
-                            }}
-                        />
-                        : <div className="md-text" dangerouslySetInnerHTML={{ __html: markdown.render(segment.content) }}></div>
-                }
-                <span className="type-tag">Markdown</span>
-            </section>
-        )
-    }
-}
+}> = observer(['store'], ({ isActive = false, onDoubleClick, segment }) =>
+    <section className={classnames("block", "text", { active: isActive })} onDoubleClick={onDoubleClick}>
+        {
+            isActive
+                ? <CodeMirror
+                    value={segment.content}
+                    options={options}
+                    onBeforeChange={(editor, data, value) => {
+                        segment.setContent(value)
+                    }}
+                />
+                : <div className="md-text" dangerouslySetInnerHTML={{ __html: markdown.render(segment.content) }}></div>
+        }
+        <span className="type-tag">Markdown</span>
+    </section>
+)
 
 export default TextBlock;

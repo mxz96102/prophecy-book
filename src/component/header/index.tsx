@@ -1,25 +1,18 @@
 import * as React from 'react';
 import ViewStore from "../../store/ViewStore";
 import Toolbar from './Toolbar'
+import { observer } from 'mobx-react';
 
-class Header extends React.Component<{
-    store: ViewStore
-}> {
-    render() {
-        const { store } = this.props;
-
-        return (
-            <header className="header">
-                <div className="logo"></div>
-                <div className="content">
-                    <div className="menu">
-                        📖  Prophecy Book - Notebook for Javascript AI
+const Header = observer([], () =>
+    <header className="header">
+        <div className="logo"></div>
+        <div className="content">
+            <div className="menu">
+                📖  Prophecy Book - Notebook for Javascript AI
                     </div>
-                    <Toolbar store={store}/>
-                </div>
-            </header>
-        )
-    }
-}
+            <Toolbar />
+        </div>
+    </header>
+)
 
 export default Header;

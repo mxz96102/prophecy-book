@@ -1,18 +1,20 @@
 const path = require('path'),
     webpack = require('webpack'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
-    MiniCssExtractPlugin = require("mini-css-extract-plugin")
-;
+    MiniCssExtractPlugin = require("mini-css-extract-plugin"),
+    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+    ;
 
 module.exports = (env = {}) => {
+    const target = env.js ? 'js' : 'src';
+
     const config = {
         entry: {
-            app: './src/index.tsx',
-            vendor: ['react', 'react-dom']
+            app: `./${target}/index.${env.js ? 'js' : 'tsx'}`
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: 'js/[name].bundle.js'
+            filename: `${target}/[name].bundle.js`
         },
         devtool: 'source-map',
         resolve: {
@@ -27,15 +29,15 @@ module.exports = (env = {}) => {
                 { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
                 {
                     test: /\.css$/,
-                    use: [ !env.production ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader' ]
+                    use: [!env.production ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
                 },
                 {
                     test: /\.less$/,
                     use: [
                         !env.production ? 'style-loader' : MiniCssExtractPlugin.loader,
-                      'css-loader',
-                      'postcss-loader',
-                      'less-loader',
+                        'css-loader',
+                        'postcss-loader',
+                        'less-loader',
                     ],
                 },
                 {
@@ -50,39 +52,54 @@ module.exports = (env = {}) => {
             new MiniCssExtractPlugin({
                 filename: "[name].css",
                 chunkFilename: "[id].css"
-              })
+            })
         ],
         optimization: {
             splitChunks: {
-              chunks: 'initial',
-              minSize: 3000,
-              maxSize: 0,
-              minChunks: 1,
-              maxAsyncRequests: 5,
-              maxInitialRequests: 3,
-              automaticNameDelimiter: '~',
-              name: true,
-              cacheGroups: {
-                vendors: {
-                  test: /[\\/]node_modules[\\/]/,
-                  priority: -10
-                },
-                default: {
-                  minChunks: 1,
-                  priority: -20,
-                  reuseExistingChunk: true
+                chunks: 'initial',
+                minSize: 3000,
+                maxSize: 0,
+                minChunks: 1,
+                maxAsyncRequests: 5,
+                maxInitialRequests: 4,
+                name: true,
+                cacheGroups: {
+                    commons: {
+                        name: 'commons',
+                        chunks: 'initial',
+                        minChunks: 2
+                    },
+                    react: {
+                        test: /(react|react-dom)/,
+                        name: 'react',
+                        chunks: 'all',
+                    },
+                    tensorflow: {
+                        test: /(@tensorflow\/tfjs)/,
+                        name: 'tfjs',
+                        chunks: 'all'
+                    },
+                    codemirror: {
+                        test: /(codemirror)/,
+                        name: 'codemirror',
+                        chunks: 'all'
+                    },
+                    default: {
+                        minChunks: 1,
+                        priority: -20,
+                        reuseExistingChunk: true
+                    }
                 }
-              }
             }
-          }
+        }
     }
-    
-    
+
+
     // 生产环境，运行npm run build则执行这里
     if (env.production) {
-        config.devtool = '#source-map'
-        config.optimization.minimize = true,
-        config.devtool = false
+        config.optimization.minimize = true;
+        config.devtool = false;
+        config.plugins.push(new BundleAnalyzerPlugin());
     }
 
     return config;

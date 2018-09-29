@@ -50,19 +50,29 @@ export default class ViewStore {
             this.deleteSeg(this.selectId);
     }
 
+    @action async runCode (seg: SegmentModel) {
+        const {content = ""} = seg;
+
+        seg.setData("正在运行中，请稍后");
+        let res = await safeEval(content, this.data);
+
+        seg.setData(res);
+        this.updateData(res);
+    }
+
     @action runNowCode () {
         const seg = this.selectedSeg;
         if (seg) {
-            const {content = ""} = seg;
-
-            seg.setData("正在运行中，请稍后");
-            safeEval(content, this.data)
-            .then((res) => {seg.setData(res), this.updateData(res)});
+            this.runCode(seg);
         }
     }
 
     @action runAllCode () {
-
+        this.resetData();
+        
+        for (const segment of this.segments) {
+            
+        }
     }
 
     @action fromJS(obj: ViewStoreLike) {

@@ -12,8 +12,8 @@ import "./index.less";
 
 const App = observer(['store'], ({store}) => 
             <div className="app">
-                <Header store={store} />
-                <Document store={store} />
+                <Header/>
+                <Document/>
             </div>
 )
 
