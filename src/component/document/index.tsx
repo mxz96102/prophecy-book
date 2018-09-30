@@ -6,7 +6,9 @@ import CodeBlock from './CodeBlock';
 import TextBlock from './TextBlock';
 import SegmentModel from '../../model/SegmentModel';
 
-const Document = inject('store')(observer(({ store }) =>
+const Document: React.SFC<{
+    store? : ViewStore
+}> = ({ store }) =>
     <div className="document" onDoubleClick={(e) => store.setSelect("")}>
         <TitleBlock isActive={store.selectId === "title"} onDoubleClick={(e) => {
             e.stopPropagation();
@@ -33,6 +35,5 @@ const Document = inject('store')(observer(({ store }) =>
             })
         }
     </div>
-))
 
-export default Document;
+export default inject('store')(observer(Document));

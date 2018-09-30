@@ -6,7 +6,7 @@ import { Icon } from 'react-fa';
 
 const Toolbar: React.SFC<{
   store?: ViewStore
-}> = inject('store')(observer(({ store, store: { selectedSeg } }) =>
+}> = ({ store, store: { selectedSeg } }) =>
   <div className="toolbar">
     <span className="tool" onClick={() => store.newSeg('TEXT', {}, "双击修改markdown文本")}>
       <Icon name="plus-square" /> 文本块
@@ -30,6 +30,6 @@ const Toolbar: React.SFC<{
       <Icon name="upload" /> <a href="javascript;;" className="upload"><input type="file" onChange={e => store.readJson(e.target.files[0])} /> 读取文件</a>
     </span>
   </div>
-))
 
-export default Toolbar;
+
+export default inject('store')(observer(Toolbar));

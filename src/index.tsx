@@ -10,7 +10,7 @@ import "codemirror/lib/codemirror.css";
 import "codemirror/theme/idea.css";
 import "./index.less";
 
-const App = inject('store')(observer(() =>
+const App = (observer(() =>
     <div className="app">
         <Header />
         <Document />

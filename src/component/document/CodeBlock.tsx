@@ -12,26 +12,26 @@ const options = {
     lineNumbers: false,
 }
 
-const CodeBlock:React.SFC<{
+const CodeBlock: React.SFC<{
     store?: ViewStore,
     onDoubleClick: React.MouseEventHandler,
     isActive: boolean,
     segment: SegmentModel,
     key: string
-}> = inject('store')(observer(({ onDoubleClick, isActive, segment }) =>
-    <section className={classnames("block", "code", { active: isActive })} onDoubleClick={onDoubleClick}>
-        <CodeMirror
-            value={segment.content}
-            options={options}
-            onBeforeChange={(editor, data, value) => {
-                segment.setContent(value)
-            }}
-        />
-        <pre className="result">
-            {segment.data && JSON.stringify(segment.data, null, 2)}
-        </pre>
-        <span className="type-tag">代 码</span>
-    </section>
-))
+}> = ({ onDoubleClick, isActive, segment }) =>
+        <section className={classnames("block", "code", { active: isActive })} onDoubleClick={onDoubleClick}>
+            <CodeMirror
+                value={segment.content}
+                options={options}
+                onBeforeChange={(editor, data, value) => {
+                    segment.setContent(value)
+                }}
+            />
+            <pre className="result">
+                {segment.data && JSON.stringify(segment.data, null, 2)}
+            </pre>
+            <span className="type-tag">代 码</span>
+        </section>
 
-export default CodeBlock;
+
+export default inject('store')(observer(CodeBlock));

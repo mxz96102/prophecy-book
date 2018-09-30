@@ -21,7 +21,7 @@ const TextBlock: React.SFC<{
     isActive: boolean,
     segment: SegmentModel,
     key: string
-}> = inject('store')(observer(({ isActive = false, onDoubleClick, segment }) =>
+}> = ({ isActive = false, onDoubleClick, segment }) =>
     <section className={classnames("block", "text", { active: isActive })} onDoubleClick={onDoubleClick}>
         {
             isActive
@@ -36,6 +36,6 @@ const TextBlock: React.SFC<{
         }
         <span className="type-tag">Markdown</span>
     </section>
-))
 
-export default TextBlock;
+
+export default inject('store')(observer(TextBlock));
