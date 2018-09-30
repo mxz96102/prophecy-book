@@ -5,6 +5,7 @@ import TitleBlock from './TitleBlock';
 import CodeBlock from './CodeBlock';
 import TextBlock from './TextBlock';
 import SegmentModel from '../../model/SegmentModel';
+import ChartBlock from './ChartBlock';
 
 const Document: React.SFC<{
     store? : ViewStore
@@ -31,6 +32,8 @@ const Document: React.SFC<{
                         return <TextBlock {...props} />
                     case "CODE":
                         return <CodeBlock {...props} />
+                    case "CHART":
+                        return <ChartBlock {...props}/>   
                 }
             })
         }

@@ -27,6 +27,7 @@
     "markdown-it": "^8.4.2",
     "mobx": "^5.1.2",
     "mobx-react": "^5.2.8",
+    "rc-dialog": "^7.2.1",
     "react": "^16.5.2",
     "react-codemirror2": "^5.1.0",
     "react-dom": "^16.5.2",

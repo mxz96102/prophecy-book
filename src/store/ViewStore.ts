@@ -13,6 +13,8 @@ export default class ViewStore {
 
     @observable selectId = "title";
 
+    @observable chartModal = false;
+
     @computed get selectedSeg() {
         return this.segments.find(seg => seg.id === this.selectId)
     }
