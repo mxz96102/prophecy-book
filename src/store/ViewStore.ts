@@ -15,8 +15,18 @@ export default class ViewStore {
 
     @observable chartModal = false;
 
+    @observable openedDialog = "";
+
     @computed get selectedSeg() {
         return this.segments.find(seg => seg.id === this.selectId)
+    }
+
+    @action openDialog(dialog: string) {
+        this.openedDialog = dialog;
+    }
+
+    @action closeDialog() {
+        this.openedDialog = "";
     }
 
     @action setTitle(title: string) {
