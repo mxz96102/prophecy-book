@@ -14,14 +14,15 @@ const ChartBlock: React.SFC<{
 }> = ({ isActive = false, onDoubleClick, segment }) =>
 <section className={classnames("block", "chart", { active: isActive })} onDoubleClick={onDoubleClick}>
     {
-        () => {
+        (() => {
+            console.log(segment.data.data)
             switch(segment.data.type) {
                 case 'SCATTER':
                 return <ScatterChart id={segment.id} data={segment.data}/>
                 default:
                 return <p>未知类型Chart</p>
             }
-        }
+        })()
     }
     <span className="type-tag">📈 图表</span>
 </section>

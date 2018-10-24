@@ -14,18 +14,20 @@ const ChartDialog: React.SFC<{
     store?: ViewStore
 }> = ({ store }) =>
         <Dialog style={{ margin: '200px auto' }} title="插入Chart" visible={store.openedDialog === "CHART"} onClose={() => store.closeDialog()}>
+            图表名称：
+            <input type="text" onChange={({target: {value}}) => store.setDialogData('title', value)}/><br/>
             转换脚本：
             <CodeMirror
                 options={options}
-                onBeforeChange={() => { }}
-                value=""
+                onBeforeChange={(editor, data, value) => store.setDialogData('content', value)}
+                value={store.dialogData.content}
             />
             数据类型：
-            <select>
+            <select onChange={({target: {value}}) => store.setDialogData('type', value)}>
                 <option value="SCATTER">冒泡图</option>
             </select>
-            <br />
-            <button>
+            <br/>
+            <button onClick={() => store.addChartDialog()}>
                 确认提交
             </button>
         </Dialog>
