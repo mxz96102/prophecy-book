@@ -27,7 +27,7 @@ const ChartDialog: React.SFC<{
                 <option value="SCATTER">冒泡图</option>
             </select>
             <br/>
-            <button onClick={() => store.addChartDialog()}>
+            <button className="dlg-btn" onClick={() => {store.addChartDialog();store.closeDialog()}}>
                 确认提交
             </button>
         </Dialog>
