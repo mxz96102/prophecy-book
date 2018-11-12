@@ -5,8 +5,11 @@ import TitleBlock from './TitleBlock';
 import CodeBlock from './CodeBlock';
 import TextBlock from './TextBlock';
 import SegmentModel from '../../model/SegmentModel';
+import ChartBlock from './ChartBlock';
 
-const Document = inject('store')(observer(({ store }) =>
+const Document: React.SFC<{
+    store? : ViewStore
+}> = ({ store }) =>
     <div className="document" onDoubleClick={(e) => store.setSelect("")}>
         <TitleBlock isActive={store.selectId === "title"} onDoubleClick={(e) => {
             e.stopPropagation();
@@ -29,10 +32,11 @@ const Document = inject('store')(observer(({ store }) =>
                         return <TextBlock {...props} />
                     case "CODE":
                         return <CodeBlock {...props} />
+                    case "CHART":
+                        return <ChartBlock {...props}/>   
                 }
             })
         }
     </div>
-))
 
-export default Document;
+export default inject('store')(observer(Document));

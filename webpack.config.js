@@ -2,8 +2,11 @@ const path = require('path'),
     webpack = require('webpack'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     MiniCssExtractPlugin = require("mini-css-extract-plugin"),
-    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-    ;
+    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
+    HappyPack = require('happypack'),
+    os = require('os');
+
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
 module.exports = (env = {}) => {
     const target = env.js ? 'js' : 'src';
@@ -24,7 +27,7 @@ module.exports = (env = {}) => {
             rules: [
                 {
                     test: /\.(ts|tsx)$/,
-                    loader: 'ts-loader'
+                    loader: 'happypack/loader?id=ts'
                 },
                 { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
                 {
@@ -52,6 +55,16 @@ module.exports = (env = {}) => {
             new MiniCssExtractPlugin({
                 filename: "[name].css",
                 chunkFilename: "[id].css"
+            }),
+            new HappyPack({ // 基础参数设置
+                id: 'ts',
+                threadPool: happyThreadPool,
+                loaders: [
+                    {
+                        path: 'ts-loader',
+                        query: { happyPackMode: true }
+                    }
+                ]
             })
         ],
         optimization: {
@@ -69,16 +82,11 @@ module.exports = (env = {}) => {
                         chunks: 'initial',
                         minChunks: 2
                     },
-                    react: {
-                        test: /(react|react-dom)/,
-                        name: 'react',
-                        chunks: 'all',
+                    tensorflow: {
+                        test: /(@tensorflow\/tfjs)/,
+                        name: 'tfjs',
+                        chunks: 'all'
                     },
-                    // tensorflow: {
-                    //     test: /(@tensorflow\/tfjs)/,
-                    //     name: 'tfjs',
-                    //     chunks: 'all'
-                    // },
                     codemirror: {
                         test: /(codemirror)/,
                         name: 'codemirror',

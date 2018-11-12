@@ -13,8 +13,36 @@ export default class ViewStore {
 
     @observable selectId = "title";
 
+    @observable chartModal = false;
+
+    @observable openedDialog = "";
+
+    @observable dialogData:{[key:string]: any} = {type: "SCATTER"};
+
+    @action setDialogData (key:string, data:any) {
+        this.dialogData[key] = data;
+    }
+
+    @action async addChartDialog () {
+        let res = await safeEval(`(() => {${this.dialogData.content}})()`, this.data);
+
+        console.log(toJS(this.dialogData))
+
+        if(res) {
+            this.newSeg('CHART', {...toJS(this.dialogData), data: res}, "");
+        }
+    }
+
     @computed get selectedSeg() {
         return this.segments.find(seg => seg.id === this.selectId)
+    }
+
+    @action openDialog(dialog: string) {
+        this.openedDialog = dialog;
+    }
+
+    @action closeDialog() {
+        this.openedDialog = "";
     }
 
     @action setTitle(title: string) {

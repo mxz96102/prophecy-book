@@ -9,11 +9,14 @@ import { safeEval } from "./tensorflow";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/idea.css";
 import "./index.less";
+import "rc-dialog/dist/rc-dialog.min.css"
+import ChartDialog from "./component/dialog/ChartDialog";
 
-const App = inject('store')(observer(() =>
+const App = (observer(() =>
     <div className="app">
         <Header />
         <Document />
+        <ChartDialog />
     </div>
 ))
 
